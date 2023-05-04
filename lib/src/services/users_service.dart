@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:prueba_tecnica/src/models/user_model.dart';
+import 'package:prueba_tecnica/src/models/models.dart';
 
 class UsersServices{
 
@@ -47,5 +47,4 @@ class UsersServices{
   }
 
   
-
 }

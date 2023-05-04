@@ -1,22 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:prueba_tecnica/src/blocs/users/users_bloc.dart';
+import 'package:prueba_tecnica/src/screens/screens.dart';
+import 'package:prueba_tecnica/src/models/models.dart';
+
+import '../blocs/posts/posts_bloc.dart';
 
 class UserActivityScreen extends StatefulWidget {
-
   const UserActivityScreen({Key? key}) : super(key: key);
 
   @override
   State<UserActivityScreen> createState() => _UserActivityScreenState();
 }
 
-class _UserActivityScreenState extends State<UserActivityScreen> with TickerProviderStateMixin{
-
+class _UserActivityScreenState extends State<UserActivityScreen>
+    with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
   void initState() {
     _tabController = TabController(length: 2, vsync: this);
+
+    final postsBloc = BlocProvider.of<PostsBloc>(context, listen: false);
+    final usersBloc = BlocProvider.of<UsersBloc>(context, listen: false);
+    postsBloc.add( GetPostListEvent( userId: usersBloc.state.currentUser!.id ) );
+    postsBloc.add( GetAlbumListEvent( userId: usersBloc.state.currentUser!.id ) );
+
     super.initState();
   }
 
@@ -24,35 +34,179 @@ class _UserActivityScreenState extends State<UserActivityScreen> with TickerProv
   Widget build(BuildContext context) {
 
     final usersBloc = BlocProvider.of<UsersBloc>(context);
+    final postsBloc = BlocProvider.of<PostsBloc>(context);
 
     return Scaffold(
-        
       appBar: AppBar(
-        title: Text('${ usersBloc.state.currentUser?.name }'),
+        title: Text('${usersBloc.state.currentUser?.name}'),
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon( Icons.post_add_sharp ), text: 'POSTS',),
-            Tab(icon: Icon( Icons.photo_album ), text: 'ALBUM',),
+            Tab(
+              icon: Icon(Icons.post_add_sharp),
+              text: 'POSTS',
+            ),
+            Tab(
+              icon: Icon(Icons.photo_album),
+              text: 'ALBUM',
+            ),
           ],
-          onTap: ( index ){
-
-          },
+          onTap: (index) {},
         ),
       ),
-
       body: TabBarView(
-        controller: _tabController,
+        
+        controller: _tabController, 
+      
         children: [
-          Center(
-            child: Text('POSTS'),
+
+          BlocBuilder<PostsBloc, PostsState>(
+            builder: (context, state) {
+
+              if( state.isLoading ){
+                return Column(
+                  children: const [
+                    
+                    LinearProgressIndicator(),
+                    Expanded(
+                      child: Center(
+                        child: Text('Espere por favor...'),
+                      )
+                    )
+
+                  ],
+                );
+              }
+
+              if( state.postList.isEmpty ){
+                return const Center(
+                  child: Text('No hay publicaciones'),
+                );
+              }
+
+              return _PostsList(
+                posts: state.postList 
+              );
+            },
           ),
-          Center(
-            child: Text('ALBUM'),
-          ),
+
+         BlocBuilder<PostsBloc, PostsState>(
+           builder: (context, state) {
+
+            if( state.isLoading ){
+              return Column(
+                children: const [
+                  
+                  LinearProgressIndicator(),
+                  Expanded(
+                    child: Center(
+                      child: Text('Espere por favor...'),
+                    )
+                  )
+
+                ],
+              );
+            }
+
+            if( state.albumList.isEmpty ){
+              return const Center(
+                child: Text('No hay albums'),
+              );
+            }
+
+            final albums = state.albumList;
+
+            return ListView.builder(
+              itemCount: albums.length,
+                itemBuilder: (_, index){
+
+                  final album = albums[ index ];
+    
+                  return ListTile(
+                    title: Text(album.title),
+                    leading: const CircleAvatar(
+                      backgroundColor: Colors.grey,
+                      child: Icon( Icons.insert_photo_sharp, color: Colors.white, ),
+                    ),
+                    onTap: (){
+                      postsBloc.add( ChangeCurrentAlbumEvent(album: album));
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const AlbumScreen()));
+                    },
+                  );
+                }
+              );
+           },
+         )
         ]
       )
+    );
+  }
+}
 
+class _PostsList extends StatelessWidget {
+  final List<PostModel> posts;
+  const _PostsList({Key? key, required this.posts}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: posts.length,
+      itemBuilder: (_, index) {
+
+        final post = posts[index];
+
+        return PostCard(
+          post: post,
+          onPressed: (){
+            final postsBloc = BlocProvider.of<PostsBloc>(context, listen: false);
+            postsBloc.add( ChangeCurrentPostEvent(post: post));
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const PostScreen() ));
+          },
+        );
+      },
+    );
+  }
+}
+
+class PostCard extends StatelessWidget {
+  const PostCard({
+    super.key,
+    required this.post,
+    required this.onPressed
+  });
+
+  final PostModel post;
+  final Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Container(
+        margin: const EdgeInsets.symmetric( vertical: 5, horizontal: 5 ),
+        child: MaterialButton(
+          padding: const EdgeInsets.all(10),
+          onPressed: onPressed,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                post.title, 
+                style: const TextStyle( 
+                  fontSize: 17, 
+                  fontWeight: FontWeight.bold 
+                ),
+              ),
+              Text(
+                post.body, 
+                style: const TextStyle( 
+                  fontSize: 17, 
+                  fontWeight: FontWeight.w300 
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

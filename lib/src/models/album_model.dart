@@ -1,38 +1,35 @@
 
 import 'dart:convert';
 
-import 'package:prueba_tecnica/src/models/models.dart';
+import 'photo_model.dart';
 
-class PostModel {
+class AlbumModel {
+
     int userId;
     int id;
     String title;
-    String body;
-    List<CommentModel>? comments;
+    List<PhotoModel>? photos;
 
-    PostModel({
+    AlbumModel({
         required this.userId,
         required this.id,
         required this.title,
-        required this.body,
-        this.comments
+        this.photos = const []
     });
 
-    factory PostModel.fromRawJson(String str) => PostModel.fromJson(json.decode(str));
+    factory AlbumModel.fromRawJson(String str) => AlbumModel.fromJson(json.decode(str));
 
     String toRawJson() => json.encode(toJson());
 
-    factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
+    factory AlbumModel.fromJson(Map<String, dynamic> json) => AlbumModel(
         userId: json["userId"],
         id: json["id"],
         title: json["title"],
-        body: json["body"],
     );
 
     Map<String, dynamic> toJson() => {
         "userId": userId,
         "id": id,
         "title": title,
-        "body": body,
     };
 }
