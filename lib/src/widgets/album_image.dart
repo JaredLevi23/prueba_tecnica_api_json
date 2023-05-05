@@ -1,3 +1,9 @@
+
+/*
+ * AlbumImage
+ * Displays an image from the network
+ */
+
 import 'package:flutter/material.dart';
 
 class AlbumImage extends StatelessWidget {

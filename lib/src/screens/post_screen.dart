@@ -1,8 +1,14 @@
+
+/*
+ * PostScreen
+ * This screen shows the selected post
+ */
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../blocs/posts/posts_bloc.dart';
-import '../models/models.dart';
+import '../widgets/widgets.dart';
 
 class PostScreen extends StatelessWidget {
   const PostScreen({Key? key}) : super(key: key);
@@ -17,9 +23,7 @@ class PostScreen extends StatelessWidget {
           builder: (context, state) {
 
             if( state.isLoading ){
-              return const Center(
-                child: Text('Espere por favor...'),
-              );
+              return const LoadingData();
             }
 
             final post = state.currentPost;
@@ -31,9 +35,10 @@ class PostScreen extends StatelessWidget {
                 children: [
             
                   Text( '${post?.title}' ,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue.shade800
                     )
                   ),
 
@@ -43,8 +48,8 @@ class PostScreen extends StatelessWidget {
             
                   Text( '${post?.body}' ,
                     style: const TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w300
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500
                     )
                   ),
 
@@ -53,10 +58,20 @@ class PostScreen extends StatelessWidget {
                   ),
 
                   Row(
-                    children: [
-                      Expanded(child: Container( height: 2, color: Colors.black, margin: const EdgeInsets.only( right: 10 ), )),
-                      Text('COMMENTS'),
-                      Expanded(child: Container( height: 2, color: Colors.black, margin: const EdgeInsets.only( left: 10 ), )),
+                    children: const [
+                      Expanded(child: Divider( thickness: 2, )),
+                      SizedBox( width: 10 ),
+                      Icon( Icons.comment, color: Colors.blueGrey ),
+                      SizedBox( width: 10 ),
+                      Text('Comments',
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blueGrey
+                        )
+                      ),
+                      SizedBox( width: 10 ),
+                      Expanded(child: Divider( thickness: 2, )),
                     ],
                   ),
             
@@ -74,46 +89,3 @@ class PostScreen extends StatelessWidget {
 }
 
 
-class CommentDetails extends StatelessWidget {
-  final CommentModel comment;
-  const CommentDetails({ Key? key, required this.comment }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context){
-    return Container(
-      margin: const EdgeInsets.symmetric( vertical: 10 ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-          Text( 
-            comment.body,
-            style: const TextStyle(
-              fontSize: 15
-            )
-          ),
-
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text( 
-              comment.email,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold
-              ),
-            )
-          ),
-
-          const SizedBox(
-            height: 10,
-          ),
-
-          const Divider(
-            thickness: 3,
-          )
-
-        ],
-      ),
-    );
-  }
-}

@@ -1,6 +1,8 @@
-// To parse this JSON data, do
-//
-//     final commentModel = commentModelFromJson(jsonString);
+
+/*
+ * CommentModel
+ * Shows the structure of the model 
+ */
 
 import 'dart:convert';
 

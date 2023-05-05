@@ -1,4 +1,9 @@
 
+/*
+ * PhotoModel
+ * Shows the structure of the model 
+ */
+
 import 'dart:convert';
 
 class PhotoModel {

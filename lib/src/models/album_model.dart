@@ -1,6 +1,10 @@
 
-import 'dart:convert';
+/*
+ * AlbumModel
+ * Shows the structure of the model
+ */
 
+import 'dart:convert';
 import 'photo_model.dart';
 
 class AlbumModel {

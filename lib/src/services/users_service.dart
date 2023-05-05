@@ -1,4 +1,9 @@
 
+/*
+ * UsersServices
+ * This class contains the methods to query the information of the api users. 
+ */
+
 import 'dart:convert';
 import 'dart:developer';
 

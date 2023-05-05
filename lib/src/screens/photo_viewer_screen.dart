@@ -1,7 +1,11 @@
 
+/*
+ * PhotoViewerScreen
+ * This screen shows the selected image
+ */
+
 import 'package:flutter/material.dart';
 import 'package:prueba_tecnica/src/models/photo_model.dart';
-
 import '../widgets/widgets.dart';
 
 class PhotoViewerScreen extends StatelessWidget {

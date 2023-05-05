@@ -1,3 +1,9 @@
+
+/* 
+ * AlbumScreen
+ * This screen shows the list of photos
+ */
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prueba_tecnica/src/blocs/posts/posts_bloc.dart';
@@ -21,9 +27,7 @@ class AlbumScreen extends StatelessWidget {
         builder: (context, state) {
 
           if( state.isLoading ){
-            return const Center(
-              child: Text('Espere por favor...'),
-            );
+            return const LoadingData();
           }
 
           if( state.currentAlbum?.photos == null || state.currentAlbum!.photos!.isEmpty ){

@@ -1,8 +1,13 @@
+
+/*
+ * PostsService
+ * This class contains the methods to query the information of the api posts.
+ */
+
 import 'dart:convert';
 import 'dart:developer';
 
 import 'package:http/http.dart' as http;
-import 'package:prueba_tecnica/src/models/album_model.dart';
 import 'package:prueba_tecnica/src/models/models.dart';
 import 'package:prueba_tecnica/src/models/photo_model.dart';
 
@@ -68,7 +73,7 @@ class PostsService{
     }
   }
 
-  /// get album list by user id - return List<AlbumModel>
+  /// get photos by album id - return List<PhotoModel>
   Future<List<PhotoModel>> getPhotosById({ required int albumId }) async {
     try {
       final response = await http.get(

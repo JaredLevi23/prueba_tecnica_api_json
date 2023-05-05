@@ -7,14 +7,9 @@ abstract class PostsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetPostListEvent extends PostsEvent{
+class GetActivityListUser extends PostsEvent{
   final int userId;
-  const GetPostListEvent({ required this.userId });
-}
-
-class GetAlbumListEvent extends PostsEvent{
-  final int userId;
-  const GetAlbumListEvent({ required this.userId });
+  const GetActivityListUser({ required this.userId });
 }
 
 class ChangeCurrentPostEvent extends PostsEvent{

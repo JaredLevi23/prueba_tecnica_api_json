@@ -1,6 +1,10 @@
 
-import 'dart:convert';
+/*
+ * PostModel
+ * Shows the structure of the model 
+ */
 
+import 'dart:convert';
 import 'package:prueba_tecnica/src/models/models.dart';
 
 class PostModel {

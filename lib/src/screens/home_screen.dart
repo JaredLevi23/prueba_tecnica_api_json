@@ -1,9 +1,15 @@
+/* 
+ * HomeScreen
+ * The first screen that is displayed in the application and shows a list of users.
+ */
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:prueba_tecnica/src/screens/screens.dart';
-import 'package:prueba_tecnica/src/models/models.dart';
+import '../../src/screens/screens.dart';
+import '../../src/models/models.dart';
 import '../blocs/users/users_bloc.dart';
+import '../widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -19,27 +25,20 @@ class HomeScreen extends StatelessWidget {
 
       body: BlocBuilder<UsersBloc, UsersState>(
         builder: (context, state) {
+
+          // is loading 
           if( state.isLoading ){
-            return Column(
-              children: const [
-                LinearProgressIndicator(
-                  minHeight: 10,
-                ),
-                Expanded(
-                  child: Center(
-                    child: Text('Espere por favor'),
-                  ),
-                )
-              ],
-            );
+            return const LoadingData();
           }
 
+          // is empty
           if( state.userList.isEmpty ){
             return const Center(
-              child: Text('No hay usuarios...'),
+              child: Text('Espere por favor...'),
             );
           }
 
+          // user list
           return _UserList( userList: state.userList );
 
         },
@@ -49,6 +48,7 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
+// User list
 class _UserList extends StatelessWidget {
   final List<UserModel> userList;
   const _UserList({Key? key, required this.userList}) : super(key: key);

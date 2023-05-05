@@ -1,3 +1,9 @@
+
+/*
+ * PostBloc
+ * Manages the status of posts 
+ */
+
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
@@ -20,24 +26,18 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     currentAlbum: null
   )) {
 
-    on<GetPostListEvent>( _onGetPostList );
-    on<GetAlbumListEvent>( _onGetAlbumList );
+    on<GetActivityListUser>( _onGetActivityList );
     on<ChangeCurrentPostEvent>( _onChangeCurrentPost );
     on<ChangeCurrentAlbumEvent>( _onChangeCurrentAlbum );
     on<IsLoadingEvent>( _onIsLoading );
   }
 
-  Future<void> _onGetPostList(GetPostListEvent event, Emitter<PostsState> emit) async {
-    add( const IsLoadingEvent(isLoading: true) );
-    final postList = await postsService.getPostsByUserId(idUser: event.userId);
-    add( const IsLoadingEvent(isLoading: false) );
-    emit( state.copyWith( postList: postList ) );
-  }
-
+  /// Is Loading
   FutureOr<void> _onIsLoading(IsLoadingEvent event, Emitter<PostsState> emit) {
     emit( state.copyWith( isLoading: event.isLoading ) );
   }
 
+  /// Change current post
   FutureOr<void> _onChangeCurrentPost(ChangeCurrentPostEvent event, Emitter<PostsState> emit) async {
     add( const IsLoadingEvent(isLoading: true) );
     final comments = await postsService.getCommentsByPost( idPost: event.post.id );
@@ -45,18 +45,20 @@ class PostsBloc extends Bloc<PostsEvent, PostsState> {
     emit( state.copyWith( currentPost: event.post..comments = comments) );
   }
 
-  Future<void> _onGetAlbumList(GetAlbumListEvent event, Emitter<PostsState> emit) async {
-    add( const IsLoadingEvent(isLoading: true) );
-    final albums = await postsService.getAlbumListByIdUser(userId: event.userId );
-    add( const IsLoadingEvent(isLoading: false) );
-    emit( state.copyWith( albumList: albums ));
-  }
-
-
+  /// Change current album
   Future<void> _onChangeCurrentAlbum(ChangeCurrentAlbumEvent event, Emitter<PostsState> emit) async {
     add( const IsLoadingEvent(isLoading: true) );
     final photos = await postsService.getPhotosById(albumId: event.album.id);
     add( const IsLoadingEvent(isLoading: false) );
     emit( state.copyWith( currentAlbum: event.album..photos = photos ) );
+  }
+
+  /// Get activity list
+  FutureOr<void> _onGetActivityList(GetActivityListUser event, Emitter<PostsState> emit)  async {
+    add( const IsLoadingEvent(isLoading: true) );
+    final posts = await postsService.getPostsByUserId(idUser: event.userId);
+    final albums = await postsService.getAlbumListByIdUser(userId: event.userId );
+    add( const IsLoadingEvent(isLoading: false) );
+    emit( state.copyWith( postList: posts, albumList: albums ) );
   }
 }
