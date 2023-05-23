@@ -1,5 +1,5 @@
-# prueba_tecnica
-Prueba tecnica. 
+# simple_json
+
 
 ## Comenzar
 Para comenzar a utilizar la aplicacion es necesario ejecutar en la raiz del proyecto el siguiente comando.
